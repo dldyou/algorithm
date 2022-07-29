@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+int n;
+ll ans;
+vector<pair<int, int>> v;
+map<int, int> mx, my;
+
+bool compair(pair<int, int> a, pair<int, int> b) {
+	if (a.second == b.second)
+		return a.first < b.first;
+	else return a.second < b.second;
+}
+
+int main(void) {
+	setbuf(stdout, NULL);
+	int test_case;
+	scanf("%d", &test_case);
+	for (int _ = 1; _ <= test_case; _++) {
+		ans = 0; v.erase(v.begin(), v.end());
+		mx.erase(mx.begin(), mx.end());
+		my.erase(my.begin(), my.end());
+		scanf("%d", &n);
+		int x, y;
+		for (int i = 0; i < n; i++) {
+			scanf("%d %d", &x, &y);
+			v.push_back({ x, y });
+			mx[x]++;
+			my[y]++;
+		}
+		sort(v.begin(), v.end());
+		bool error = false;
+		for (int i = 0; i < n - 1; i += 2) {
+			int x1 = v[i].first, x2 = v[i + 1].first;
+			int y1 = v[i].second, y2 = v[i + 1].second;
+			if (!error) {
+				bool chk1 = (mx[x1] % 2 == 1 && my[y1] % 2 == 1);
+				bool chk2 = (mx[x2] % 2 == 1 && my[y2] % 2 == 1);
+				if (chk1) {
+					x1 = v[i + 2].first;
+					y1 = v[i + 2].second;
+					i++;
+					error = true;
+				}
+				if (chk2) {
+					x2 = v[i + 2].first;
+					y2 = v[i + 2].second;
+					i++;
+					error = true;
+				}
+			}
+			ans += abs(y2 - y1);
+		}
+		sort(v.begin(), v.end(), compair);
+		error = false;
+		for (int i = 0; i < n - 1; i += 2) {
+			int x1 = v[i].first, x2 = v[i + 1].first;
+			int y1 = v[i].second, y2 = v[i + 1].second;
+			if (!error) {
+				bool chk1 = mx[x1] % 2 == 1 && my[y1] % 2 == 1;
+				bool chk2 = mx[x2] % 2 == 1 && my[y2] % 2 == 1;
+				if (chk1) {
+					x1 = v[i + 2].first;
+					y1 = v[i + 2].second;
+					i++;
+					error = true;
+				}
+				if (chk2) {
+					x2 = v[i + 2].first;
+					y2 = v[i + 2].second;
+					i++;
+					error = true;
+				}
+			}
+			ans += abs(x2 - x1);
+		}
+		printf("Case #%d\n", _);
+	}
+	return 0;
+}
