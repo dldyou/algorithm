@@ -1,0 +1,75 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+#define P 30000
+
+int A, B;
+int scoreA, scoreB;
+
+bool prime[30001];
+
+void setPrime(void) {
+	memset(prime, true, sizeof prime);
+	prime[0] = prime[1] = false;
+	for (int i = 2; i * i <= P; i++) {
+		if (prime[i]) {
+			for (int j = i * i; j <= P; j += i)
+				prime[j] = false;
+		}
+	}
+}
+
+void score(int num, int len, int s, bool isA) {
+	if (isA) scoreA = max(scoreA, s);
+	else scoreB = max(scoreB, s);
+	if (num == 0 || len == 0) return;
+	int NUM[6] = { 0 }, temp = num;
+	for (int i = 5; i >= 0; i--) {
+		NUM[i] = temp % 10;
+		temp /= 10;
+	}
+
+	temp = 0;
+	for (int i = 0; i < len; i++) {
+		int ten = 1;
+		for (int j = 0; j < len; j++) {
+			if (i != j) {
+				temp += NUM[5 - j] * ten;
+				ten *= 10;
+			}
+		}
+		if (prime[temp])
+			score(temp, len - 1, s + 1, isA);
+		else score(0, 0, s, isA);
+		temp = 0;
+	}
+}
+
+int main(void) {
+	setbuf(stdout, NULL);
+	setPrime();
+	int test_case;
+	scanf("%d", &test_case);
+	for (int _ = 1; _ <= test_case; _++) {
+		scanf("%d %d", &A, &B);
+		int temp, len;
+
+		len = 0; temp = A;
+		while (temp) { temp /= 10; len++; }
+		if (prime[A]) scoreA = 1;
+		score(A, len, scoreA, true);
+
+		len = 0; temp = B;
+		while (temp) { temp /= 10; len++; }
+		if (prime[B]) scoreB = 1;
+		score(B, len, scoreB, false);
+
+		printf("Case #%d\n", _);
+		if (scoreA > scoreB) printf("1\n");
+		else if (scoreA < scoreB) printf("2\n");
+		else printf("3\n");
+		scoreA = 0; scoreB = 0;
+	}
+	return 0;
+}
