@@ -35,7 +35,7 @@ void kmp(void) {
 	}
 }
 int main(void) {
-	//fast io
+	//fast io//
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
